@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    "${author}"
+  ],
+  "license": "${license}",
+  "contact": {
+    "homepage": "${homepage}",
+    "sources": "${homepage}",
+    "issues": "${homepage}/issues"
+  },
+  "icon": "assets/sprocket_dyes/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.sprocketstudios.sprocketdyes.SprocketDyesFabric"
+    ],
+    "client": [
+      "io.github.sprocketstudios.sprocketdyes.client.SprocketDyesFabricClient"
+    ]
+  },
+  "mixins": [
+    "sprocket_dyes.mixins.json"
+  ],
+  "accessWidener": "sprocket_dyes.ct",
+  "depends": {
+    "fabricloader": "${fabric_loader}",
+    "minecraft": "${minecraft}",
+    "fabric-api": "*",
+    "architectury": "${architectury}"
+  }
+}

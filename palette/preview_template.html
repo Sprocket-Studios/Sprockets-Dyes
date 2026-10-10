@@ -1,0 +1,287 @@
+<title>Sprocket Dyes Palette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: an inventory-style 16x8 slot grid (hues x sat/value) with a sticky inspector beside it; reference sections below. */
+:root {
+  --bg: #e9ebee;
+  --surface: #f7f8f9;
+  --ink: #1d2126;
+  --muted: #5d6570;
+  --line: #c9ced5;
+  --slot: #8b8b8b;          /* inventory slot frame */
+  --slot-hi: #ffffff;
+  --slot-lo: #373737;
+  --accent: #3c44aa;        /* vanilla blue dye */
+  --warn: #a5541a;
+  --font-display: "Pixelify Sans", "Courier New", monospace;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --cell: clamp(46px, 5.6vw, 84px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b; --surface: #1d2025; --ink: #e8eaee; --muted: #9aa3ae; --line: #343941;
+    --slot: #2b2e33; --slot-hi: #4a4f57; --slot-lo: #0b0c0e; --accent: #8294f2; --warn: #e2a36b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b; --surface: #1d2025; --ink: #e8eaee; --muted: #9aa3ae; --line: #343941;
+  --slot: #2b2e33; --slot-hi: #4a4f57; --slot-lo: #0b0c0e; --accent: #8294f2; --warn: #e2a36b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; gap: 36px; }
+h1, h2 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.1; }
+h2 { font-size: 22px; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); font-weight: 700; }
+
+header { display: grid; gap: 14px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.stats div { display: flex; align-items: baseline; gap: 6px; }
+.stats b { font-family: var(--font-display); font-size: 24px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { font: inherit; font-size: 13px; padding: 6px 12px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible, .slot:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+@media (max-width: 1000px) { .main { grid-template-columns: minmax(0, 1fr); } }
+.scroller { overflow-x: auto; padding-bottom: 6px; }
+
+.grid { display: grid; grid-template-columns: 112px repeat(4, var(--cell)) 14px repeat(4, var(--cell)); gap: 4px; width: max-content; }
+.colhead { font-size: 11px; color: var(--muted); text-align: center; align-self: end; padding-bottom: 2px; }
+.grouphead { grid-column: span 4; font-family: var(--font-display); font-size: 15px; text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 2px; }
+.huelabel { display: flex; flex-direction: column; justify-content: center; padding-right: 8px; }
+.huelabel strong { font-family: var(--font-display); font-size: 16px; line-height: 1.1; }
+.huelabel span { font-size: 11px; color: var(--muted); }
+.spacer { width: 14px; }
+.keyrow { margin-bottom: 10px; }
+
+.slot {
+  width: var(--cell); height: var(--cell); position: relative; padding: 0; cursor: pointer;
+  border: 0; background: var(--slot);
+  box-shadow: inset 2px 2px 0 var(--slot-lo), inset -2px -2px 0 var(--slot-hi);
+}
+.slot .fill { position: absolute; inset: 4px; background: var(--c); display: flex; align-items: flex-end; padding: 3px 4px; }
+.slot .nm { font-size: 10.5px; line-height: 1.1; font-weight: 700; color: var(--t); text-align: left; overflow-wrap: anywhere; }
+.slot.vanilla .fill::after {
+  content: "V"; position: absolute; top: 3px; right: 3px; width: 15px; height: 15px; display: grid; place-items: center;
+  font: 700 10px/1 var(--font-display); color: var(--t); border: 1.5px solid var(--t); border-radius: 50%;
+}
+.slot[aria-pressed="true"] { box-shadow: inset 2px 2px 0 var(--slot-lo), inset -2px -2px 0 var(--slot-hi), 0 0 0 3px var(--accent); z-index: 1; }
+.slot.dim .fill { opacity: 0.18; }
+.slot:hover .fill { filter: brightness(1.06); }
+
+.inspector { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.inspector .hero { height: 128px; background: var(--c); display: flex; align-items: flex-end; padding: 12px 14px; color: var(--t); }
+.inspector .hero h2 { font-size: 26px; }
+.inspector .body { padding: 14px; display: grid; gap: 12px; }
+.tooltip { background: #100010e8; border: 2px solid #2b0d5e; border-radius: 3px; padding: 6px 8px; font-family: var(--font-display); font-size: 14px; color: #fff; line-height: 1.35; }
+.tooltip .sub { color: #aaaaaa; }
+dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; margin: 0; font-size: 13px; }
+dt { color: var(--muted); }
+dd { margin: 0; display: flex; align-items: center; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+.chip { width: 14px; height: 14px; border-radius: 3px; background: var(--c); border: 1px solid #0003; flex: none; }
+.near { display: flex; flex-wrap: wrap; gap: 6px; }
+.near button { font: inherit; font-size: 12px; display: inline-flex; gap: 6px; align-items: center; padding: 3px 8px 3px 4px; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); color: var(--ink); cursor: pointer; }
+
+section { display: grid; gap: 14px; }
+.patterns { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.pattern { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: grid; gap: 8px; }
+.pattern .head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+.pattern .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.pattern .chips button { width: 22px; height: 22px; border: 1px solid #0003; border-radius: 3px; background: var(--c); cursor: pointer; padding: 0; }
+.pattern .count { margin-left: auto; color: var(--muted); font-weight: 400; }
+
+.pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.pair { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.pair .sw { display: flex; }
+.pair .sw span { width: 28px; height: 28px; background: var(--c); }
+.pair .d { margin-left: auto; color: var(--warn); }
+.pair .names { min-width: 0; }
+footer { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { .slot .fill { transition: opacity .15s, filter .1s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="label">Sprocket Dyes · palette review</div>
+    <h1>132 dyes on three axes</h1>
+    <p class="lede">16 hues × 2 saturations × 4 values, plus the 4 vanilla Key dyes. The 12 colored vanilla dyes are pinned to grid points (marked V) and keep their exact colors; the other 116 are computed around them in OKLCH. Click any slot to inspect it. Names, positions and hues are all still adjustable.</p>
+    <div class="stats" id="stats"></div>
+    <div class="controls">
+      <span class="label">Label slots by</span>
+      <div class="seg" role="group" aria-label="Slot label">
+        <button id="lbl-name" aria-pressed="true">Name</button>
+        <button id="lbl-hex" aria-pressed="false">Hex</button>
+        <button id="lbl-none" aria-pressed="false">None</button>
+      </div>
+      <span class="label">Highlight</span>
+      <div class="seg" role="group" aria-label="Highlight">
+        <button id="hl-all" aria-pressed="true">All</button>
+        <button id="hl-vanilla" aria-pressed="false">Vanilla</button>
+        <button id="hl-new" aria-pressed="false">New</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="scroller"><div class="grid" id="grid" aria-label="Palette grid"></div></div>
+    <aside class="inspector" id="inspector" aria-live="polite"></aside>
+  </div>
+
+  <section>
+    <h2>Glazed terracotta patterns</h2>
+    <p class="lede">Each new color borrows one of the 16 vanilla glazed patterns, recolored. Within a hue all 8 patterns differ, and every pattern ends up on 8 or 9 colors, its own vanilla color included.</p>
+    <div class="patterns" id="patterns"></div>
+  </section>
+
+  <section>
+    <h2>Closest pairs</h2>
+    <p class="lede">Pairs whose OKLab distance is under 0.045. Most are dark colors in neighboring hues, where the sRGB gamut is narrow. These are the colors most worth checking side by side in game.</p>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <footer>Generated from <span class="mono">palette/colors.json</span> by <span class="mono">palette/render_preview.py</span>.</footer>
+</div>
+
+<script>
+const P = /*__PALETTE__*/null;
+const VAL = { bright: "Bright", medium: "Medium", deep: "Deep", dark: "Dark" };
+const SAT = { standard: "Standard", muted: "Muted" };
+const hueName = Object.fromEntries(P.hues.map(h => [h.id, h.name]));
+const all = [...P.key, ...P.colors];
+const byId = Object.fromEntries(all.map(c => [c.id, c]));
+const vanillaName = id => byId[id] ? byId[id].name : id;
+
+function lum(hex) {
+  const v = [0, 2, 4].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(c => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+const textOn = hex => lum(hex) > 0.36 ? "#141414" : "#ffffff";
+const css = (el, hex) => { el.style.setProperty("--c", "#" + hex); el.style.setProperty("--t", textOn(hex)); };
+const tooltipLine = c => c.hue === "key" ? "Key" : `${hueName[c.hue]} · ${SAT[c.sat]} · ${VAL[c.value]}`;
+
+let state = { sel: "muted_deep_teal", label: "name", hl: "all" };
+try { const s = JSON.parse(localStorage.getItem("sd-preview") || "{}"); Object.assign(state, s); } catch (e) {}
+if (!byId[state.sel]) state.sel = "muted_deep_teal";
+const save = () => { try { localStorage.setItem("sd-preview", JSON.stringify(state)); } catch (e) {} };
+
+const newCount = P.colors.filter(c => !c.vanilla).length;
+document.getElementById("stats").innerHTML = [
+  [all.length, "dyes"], [newCount, "new"], [P.colors.length - newCount, "vanilla on the grid"], [P.key.length, "key"], [P.hues.length, "hues"],
+].map(([n, l]) => `<div><b>${n}</b><span class="label">${l}</span></div>`).join("");
+
+const slots = [];
+function slot(c) {
+  const b = document.createElement("button");
+  b.className = "slot" + (c.vanilla ? " vanilla" : "");
+  b.dataset.id = c.id;
+  b.setAttribute("aria-label", `${c.name}, ${tooltipLine(c)}`);
+  css(b, c.hex);
+  b.innerHTML = `<span class="fill"><span class="nm"></span></span>`;
+  b.addEventListener("click", () => select(c.id));
+  slots.push(b);
+  return b;
+}
+
+function buildGrid() {
+  const g = document.getElementById("grid");
+  const add = (el, cls, html) => { const d = document.createElement(el); if (cls) d.className = cls; if (html != null) d.innerHTML = html; g.appendChild(d); return d; };
+  // Key row
+  const k = add("div", "huelabel keyrow", `<strong>Key</strong><span>vanilla neutrals</span>`);
+  P.key.forEach(c => { const s = slot(c); s.classList.add("keyrow"); g.appendChild(s); });
+  add("div", "spacer keyrow"); for (let i = 0; i < 4; i++) add("div", "keyrow");
+  // Group headers
+  add("div"); add("div", "grouphead", "Standard"); add("div", "spacer"); add("div", "grouphead", "Muted");
+  add("div");
+  for (let s = 0; s < 2; s++) { P.values.forEach(v => add("div", "colhead", VAL[v])); if (s === 0) add("div", "spacer"); }
+  P.hues.forEach(h => {
+    add("div", "huelabel", `<strong>${h.name}</strong><span class="mono">${h.angle.toFixed(1)}°</span>`);
+    const row = P.colors.filter(c => c.hue === h.id);
+    row.forEach((c, i) => { if (i === 4) add("div", "spacer"); g.appendChild(slot(c)); });
+  });
+}
+
+function paintLabels() {
+  slots.forEach(b => {
+    const c = byId[b.dataset.id];
+    b.querySelector(".nm").textContent = state.label === "name" ? c.name : state.label === "hex" ? "#" + c.hex : "";
+    b.querySelector(".nm").classList.toggle("mono", state.label === "hex");
+    const dim = (state.hl === "vanilla" && !c.vanilla) || (state.hl === "new" && c.vanilla);
+    b.classList.toggle("dim", dim);
+    b.setAttribute("aria-pressed", String(c.id === state.sel));
+  });
+  [["name", "lbl-name"], ["hex", "lbl-hex"], ["none", "lbl-none"]].forEach(([v, id]) => document.getElementById(id).setAttribute("aria-pressed", String(state.label === v)));
+  [["all", "hl-all"], ["vanilla", "hl-vanilla"], ["new", "hl-new"]].forEach(([v, id]) => document.getElementById(id).setAttribute("aria-pressed", String(state.hl === v)));
+}
+
+function nearOf(id) {
+  return P.similar_pairs.filter(p => p.a === id || p.b === id).map(p => ({ id: p.a === id ? p.b : p.a, d: p.distance }));
+}
+
+function select(id) {
+  state.sel = id; save(); paintLabels();
+  const c = byId[id];
+  const el = document.getElementById("inspector");
+  const near = nearOf(id);
+  const reg = c.vanilla ? `minecraft:${c.id}_dye` : `sprocket_dyes:${c.id}_dye`;
+  el.innerHTML = `
+    <div class="hero"><div><div class="label" style="color:inherit;opacity:.8">${c.vanilla ? "Vanilla dye" : "New dye"}</div><h2>${c.name}</h2></div></div>
+    <div class="body">
+      <div class="tooltip">${c.name} Dye<br><span class="sub">${tooltipLine(c)}</span></div>
+      <dl>
+        <dt>Registry id</dt><dd class="mono">${reg}</dd>
+        <dt>Color</dt><dd><span class="chip" style="--c:#${c.hex}"></span><span class="mono">#${c.hex}</span></dd>
+        <dt>Firework</dt><dd><span class="chip" style="--c:#${c.firework}"></span><span class="mono">#${c.firework}</span></dd>
+        <dt>Sign text</dt><dd><span class="chip" style="--c:#${c.text}"></span><span class="mono">#${c.text}</span></dd>
+        <dt>Map color</dt><dd class="mono">${c.map_color}</dd>
+        <dt>Texture source</dt><dd><span class="chip" style="--c:#${byId[c.source].hex}"></span>${vanillaName(c.source)}</dd>
+        <dt>Glazed pattern</dt><dd><span class="chip" style="--c:#${byId[c.glazed].hex}"></span>${vanillaName(c.glazed)}'s pattern</dd>
+      </dl>
+      ${near.length ? `<div class="label">Close to</div><div class="near">${near.map(n => `<button data-go="${n.id}"><span class="chip" style="--c:#${byId[n.id].hex}"></span>${byId[n.id].name} <span class="mono" style="color:var(--muted)">${n.d.toFixed(3)}</span></button>`).join("")}</div>` : ""}
+    </div>`;
+  css(el.querySelector(".hero"), c.hex);
+  el.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => select(b.dataset.go)));
+}
+
+function buildPatterns() {
+  const box = document.getElementById("patterns");
+  const order = P.key.map(c => c.id).concat(Object.keys(P.glazed_usage).filter(k => !P.key.some(c => c.id === k)));
+  order.forEach(p => {
+    const users = all.filter(c => c.glazed === p);
+    const d = document.createElement("div");
+    d.className = "pattern";
+    d.innerHTML = `<div class="head"><span class="chip" style="--c:#${byId[p].hex}"></span>${vanillaName(p)}<span class="count mono">${users.length}</span></div><div class="chips"></div>`;
+    const chips = d.querySelector(".chips");
+    users.forEach(u => { const b = document.createElement("button"); b.style.setProperty("--c", "#" + u.hex); b.title = u.name; b.setAttribute("aria-label", u.name); b.addEventListener("click", () => { select(u.id); document.getElementById("inspector").scrollIntoView({ block: "nearest" }); }); chips.appendChild(b); });
+    box.appendChild(d);
+  });
+}
+
+function buildPairs() {
+  const box = document.getElementById("pairs");
+  P.similar_pairs.forEach(p => {
+    const a = byId[p.a], b = byId[p.b];
+    const d = document.createElement("div");
+    d.className = "pair";
+    d.innerHTML = `<div class="sw"><span style="--c:#${a.hex}"></span><span style="--c:#${b.hex}"></span></div><div class="names">${a.name} · ${b.name}</div><span class="d mono">${p.distance.toFixed(3)}</span>`;
+    box.appendChild(d);
+  });
+}
+
+[["lbl-name", "label", "name"], ["lbl-hex", "label", "hex"], ["lbl-none", "label", "none"], ["hl-all", "hl", "all"], ["hl-vanilla", "hl", "vanilla"], ["hl-new", "hl", "new"]]
+  .forEach(([id, k, v]) => document.getElementById(id).addEventListener("click", () => { state[k] = v; save(); paintLabels(); }));
+
+buildGrid(); buildPatterns(); buildPairs(); select(state.sel);
+</script>

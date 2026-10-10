@@ -1,0 +1,31 @@
+license = "${license}"
+issueTrackerURL = "${homepage}/issues"
+
+modLoader = "javafml"
+loaderVersion = "[1,)"
+
+[[mods]]
+modId = "${id}"
+displayName = "${name}"
+version = "${version}"
+authors = "${author}"
+displayURL = "${homepage}"
+description = "${description}"
+logoFile = "assets/sprocket_dyes/icon.png"
+
+[[mixins]]
+config = "sprocket_dyes.mixins.json"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "architectury"
+type = "required"
+versionRange = "${architectury}"
+ordering = "AFTER"
+side = "BOTH"
