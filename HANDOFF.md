@@ -64,6 +64,7 @@ scripts/clientshots.sh 26.3-neoforge              # creative tab screenshots + s
 python3 palette/design_palette.py && python3 palette/generate_code.py   # after palette edits
 python3 datagen/textures.py                       # after palette edits
 python3 datagen/generate.py lang                  # after product/palette changes (all 10 versions)
+python3 scripts/publish_modrinth.py sprocket-dyes [--publish]   # upload build/libs jars (dry run without --publish; token in ~/.config/modrinth/token)
 ```
 
 Run Gradle invocations **one at a time** — overlapping runs collide on the server port and give false failures.
