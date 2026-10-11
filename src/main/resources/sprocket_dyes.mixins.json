@@ -10,6 +10,7 @@
     "DyeColorMixin",
     "EntityMixin",
     "MapBannerMixin",
+    "MappedRegistryMixin",
     "PoiTypeMixin",
     "PoiTypesMixin",
     "SheepLegacyMixin",

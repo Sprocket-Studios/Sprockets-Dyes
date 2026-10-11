@@ -1,9 +1,7 @@
 package io.github.sprocketstudios.sprocketdyes.client;
 
 import net.minecraft.client.gui.Font;
-//? if >=26.3 {
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-//?}
 
 /**
  * Draws a section header across one row of the creative grid: a raised bar in the inventory's own greys
@@ -24,7 +22,6 @@ public final class SectionHeaderRenderer {
     private static final int COUNT_INK = 0xFF6B6B6B;
     private static final int CHIP_EDGE = 0xFF2E2E2E;
 
-    //? if >=26.3 {
     public static void draw(GuiGraphicsExtractor g, Font font, CreativeSections.Section section, int x, int y, boolean hovered) {
         boolean open = CreativeSections.isExpanded(section);
         int x1 = x + WIDTH, y1 = y + HEIGHT;
@@ -68,5 +65,4 @@ public final class SectionHeaderRenderer {
             }
         }
     }
-    //?}
 }

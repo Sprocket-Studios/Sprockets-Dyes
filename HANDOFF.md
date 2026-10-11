@@ -1,7 +1,7 @@
 # Sprocket Dyes — handoff
 
-Notes for whoever picks this up next. **26.3 NeoForge is feature-complete and verified**; the other 19
-version/loader nodes need a re-test and one feature port (see *Remaining work*).
+Notes for whoever picks this up next. **Feature-complete on all 20 version/loader nodes**; server self-test
+passes everywhere (see *Status*).
 
 ## What the mod is
 
@@ -17,6 +17,8 @@ muted) × 4-value (bright, medium, deep, dark) grid. The 12 colored vanilla dyes
   itself has from 26.3
 - a mixing grid of 397 two-dye recipes (every color reachable from vanilla dyes), random new dyes from the
   Wandering Trader, a "Hue · Saturation · Value" tooltip on every colored item
+- glazed terracotta slabs/walls face like the full block (`facing` property, `GlazedShapes`); stairs follow their
+  own facing. Their models are cut from the full block's texture mapping (`datagen/glazed.py`), no uvlock
 - the creative "Colored Blocks" tab split into collapsible sections (Key, 16 hues, Other)
 
 Display names are evocative ("Eucalyptus"); registry ids are systematic and stable (`muted_deep_teal`).
@@ -41,6 +43,8 @@ Display names are evocative ("Eucalyptus"); registry ids are systematic and stab
 | `palette/design_palette.py` → `palette/colors.json` | The palette (single source of truth). Edit CONFIG in the script, not the JSON. |
 | `palette/generate_code.py` | `colors.json` → `SprocketPalette.java`, `NewDyeColorDefinitions.java`, dye lang keys. |
 | `palette/render_preview.py` | Palette review page (published artifact). |
+| `datagen/icon.py` | Renders `assets/sprocket_dyes/icon.png` (16 hue dyes, 4x4) - committed output. |
+| `datagen/glazed.py` | Glazed shape models/blockstates (slices of the full block, per FaceBakery's UV rotation rules). |
 | `datagen/generate.py` | Per-version data (recipes, models, blockstates, loot, tags, equipment, sheep loot) **by retargeting vanilla's own magenta files** for that version; stone-brick family as template for shapes vanilla lacks. `lang` subcommand rewrites the committed lang file. Not committed output. |
 | `datagen/mixing.py` | Mixing-grid rules + reachability check. |
 | `datagen/textures.py` | Recolors vanilla textures in OKLCH from each color's nearest vanilla color (glazed: assigned pattern; dyes: per-hue sprite). Only pixels that differ across vanilla's 16 variants are recolored (keeps bed wood, shulker heads, buckles). Output **is committed** in `src/main/resources/assets/{sprocket_dyes,minecraft}/textures`. |
@@ -56,7 +60,7 @@ Display names are evocative ("Eucalyptus"); registry ids are systematic and stab
 ./gradlew chiseledBuild                           # all 20 jars
 scripts/selftest-all.sh [node ...]                # server self-test (fails on any data-load error too)
 scripts/clienttest.sh [node ...]                  # client: missing models/textures check (opens a window)
-scripts/clientshots.sh 26.3-neoforge              # creative tab screenshots -> run/screenshots/ (26.3 only; needs that node's selftest world)
+scripts/clientshots.sh 26.3-neoforge              # creative tab screenshots + section toggle scroll check -> run/screenshots/ (needs that node's selftest world)
 python3 palette/design_palette.py && python3 palette/generate_code.py   # after palette edits
 python3 datagen/textures.py                       # after palette edits
 python3 datagen/generate.py lang                  # after product/palette changes (all 10 versions)
@@ -82,48 +86,32 @@ Run Gradle invocations **one at a time** — overlapping runs collide on the ser
   entity data — NeoForge rejects it in dev and warns in prod.
 - **Items** copy their vanilla counterpart's components up to 1.21.11; from 26.1 components bind late, so
   `ModItems.copied()` spells out per-kind properties.
-- **Creative tab** (26.3 only so far): `CreativeModeInventoryScreenMixin` replaces the Colored Blocks list
+- **Creative tab** (all versions): `CreativeModeInventoryScreenMixin` replaces the Colored Blocks list
   after `selectTab`/`refreshCurrentTabContents` with `CreativeSections.apply()` (header row = 9 empty slots),
-  toggles on header clicks, and `AbstractContainerScreenMixin` draws headers at the end of
-  `extractContents`. Only the visible list changes; tab contents/search/JEI are untouched.
+  toggles on header clicks (keeping the header in view; opening scrolls just enough to show the section), and
+  `AbstractContainerScreenMixin` draws headers after the slots: `extractContents` TAIL (26.1+),
+  `renderContents` TAIL (1.21.6-1.21.11), before `renderLabels` in `render` (<=1.21.5, pose is translated).
+  Left click is `InputConstants.MOUSE_BUTTON_LEFT` (0, but 1 on 26.3). Only the visible list changes; tab
+  contents/search/JEI are untouched.
 - **26.3 aliases** (`Aliases`): old `sprocket_dyes:<vanilla color>_{wool,concrete}_{slab,stairs}` →
-  vanilla ids, NeoForge `addAlias` for blocks and items.
+  vanilla ids. NeoForge `addAlias` for blocks and items; Fabric `MappedRegistryMixin` resolves them in the same
+  `MappedRegistry` lookups NeoForge patches.
 
 ## Status
 
-Verified on **26.3 NeoForge** (2026-10-11): server self-test (colors, codecs, registrations, all data loads,
-block entities, villager homes, map markers, collection picks, sheep colors, aliases incl. saved states),
-client asset test (no missing models/textures), creative tab screenshots with real clicks. The user is
-doing the in-game visual pass.
+2026-10-11, all 20 nodes: server self-test **PASS** (incl. glazed shape facings, aliases on both 26.3
+loaders) and client asset test **PASS**. Creative tab screenshots + section toggle scroll check pass on
+1.21.1-fabric, 1.21.5-neoforge, 1.21.8-fabric, 26.1.2-neoforge, 26.3-neoforge (one per draw hook / click
+signature). In-game checks by the owner on 26.3 NeoForge: glazed shape facing, toggle scroll.
+The 1.21.8 node also covers 1.21.6-7; its `renderContents` hook was only checked against the 1.21.8 jar.
 
-Last known server self-test results on other nodes:
-- Passed **with current code**: 1.21.1-fabric, 1.21.8-neoforge, 1.21.10-neoforge, 26.2-neoforge, 26.3-fabric.
-- Passed **before** the sheep-packet rewrite: 1.21.1-neoforge, 1.21.3 (both), 1.21.4 (both), 1.21.5 (both),
-  1.21.8-fabric, 1.21.10-fabric.
-- Not run since Phase 5: 1.21.11 (both), 26.1.2 (both), 26.2-fabric, 26.3 aliases on Fabric.
-- Client asset test: only 26.3-neoforge.
+License: LGPL-3.0-only (`COPYING`, `COPYING.LESSER`, both bundled into jars). Icon: `datagen/icon.py`.
 
-## Remaining work (suggested order)
+## Remaining work
 
-1. **Full matrix**: `scripts/selftest-all.sh` and `scripts/clienttest.sh` on all 20 nodes; fix what breaks.
-2. **Creative sections on the other versions.** `CreativeModeInventoryScreenMixin`,
-   `AbstractContainerScreenMixin`, `SectionHeaderRenderer` are `//? if >=26.3` and disabled below 26.3 in
-   `SprocketMixinPlugin`. Differences to handle:
-   - drawing: `GuiGraphics` (≤1.21.11, immediate; 1.21.6 render-pipeline changes) vs `GuiGraphicsExtractor`
-     (26.1+; already a Stonecutter replacement for the class name) — find the "after slots, before
-     tooltip" hook per version (`renderSlots`/`renderContents` names change)
-   - input: `mouseClicked(double, double, int)` before 1.21.9, `MouseButtonEvent` from 1.21.9; **26.x uses
-     SDL button numbers (left = `InputConstants.MOUSE_BUTTON_LEFT` = 1)** — check 26.1/26.2
-   - `minecraft.getOverlay()` vs `minecraft.gui.overlay()` (26.2+), `setScreen` location
-   - extend `scripts/clientshots.sh`/`ClientTest.shots()` per version and look at the screenshots
-3. **Fabric 26.3 aliases**: Fabric has no registry alias API; add a small mixin (e.g. on registry id lookup)
-   so `Aliases.pairs()` also applies on Fabric, and enable the alias self-test there.
-4. **Polish**: mod icon (`assets/sprocket_dyes/icon.png` is referenced but missing), license
-   (`stonecutter.properties.toml` says All-Rights-Reserved as a placeholder — ask the owner), check
-   Sodium/other popular mods (a Sodium alpha crashed on NeoForge 26.3.0.65-beta on its own — not ours).
-5. **Deliberately not done**: shepherd villagers selling beds/banners in new colors (would crowd vanilla's
+1. Check Sodium/other popular mods (a Sodium alpha crashed on NeoForge 26.3.0.65-beta on its own - not ours).
+2. **Deliberately not done**: shepherd villagers selling beds/banners in new colors (would crowd vanilla's
    trade pools), colored shulker mobs.
-6. **Git**: only the initial scaffold is committed; everything since is uncommitted. Ask before committing.
 
 ## Gotchas learned the hard way
 
@@ -139,5 +127,7 @@ Last known server self-test results on other nodes:
   models use namespace-less paths (`item/x`).
 - Vanilla's re-dye recipes list "every other color" explicitly; the generator rebuilds those lists for 132
   colors and overrides vanilla's 16 re-dye recipes so they accept our items too.
+- Before 1.21.5 `WallBlock` caches shapes in a map keyed by states built from `defaultBlockState()`, so a wall
+  with an extra property (glazed `facing`) must look shapes up with that property at its default value.
 - First client launch shows the accessibility onboarding screen, which blocks quick play
   (`clientshots.sh` sets `onboardAccessibility:false`).

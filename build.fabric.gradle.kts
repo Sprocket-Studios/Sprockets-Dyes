@@ -153,7 +153,7 @@ tasks {
     withType<Jar> {
         val name = project.property("mod.id")
         inputs.property("mod_id", name)
-        from(rootProject.file("LICENSE")) { rename { "${it}_$name" } }
+        from(rootProject.files("COPYING", "COPYING.LESSER")) { rename { "${it}_$name" } }
     }
 
     register<Copy>("buildAndCollect") {

@@ -3,12 +3,12 @@ package io.github.sprocketstudios.sprocketdyes.debug;
 import dev.architectury.event.events.client.ClientTickEvent;
 import io.github.sprocketstudios.sprocketdyes.SprocketDyes;
 import net.minecraft.client.Minecraft;
-//? if >=26.3 {
+import io.github.sprocketstudios.sprocketdyes.client.CreativeSections;
 import io.github.sprocketstudios.sprocketdyes.client.SectionedCreativeScreen;
 import net.minecraft.client.Screenshot;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.level.GameType;
-//?}
 
 /**
  * Dev-only client checks.
@@ -47,15 +47,9 @@ public final class ClientTest {
             SprocketDyes.LOGGER.info("[clienttest] resources loaded on Minecraft {}", SprocketDyes.MINECRAFT);
             Runtime.getRuntime().halt(0);
         }
-        //? if >=26.3 {
         shots(minecraft);
-        //?} else {
-        /*SprocketDyes.LOGGER.info("[clienttest] screenshots are only scripted for 26.3");
-        Runtime.getRuntime().halt(0);
-        *///?}
     }
 
-    //? if >=26.3 {
     private static void shots(Minecraft minecraft) {
         if (wait > 0) {
             wait--;
@@ -63,7 +57,7 @@ public final class ClientTest {
         }
         switch (step) {
             case 0 -> {  // in a world, no loading screen
-                if (minecraft.player == null || minecraft.level == null || minecraft.gui.screen() != null || minecraft.getSingleplayerServer() == null) return;
+                if (minecraft.player == null || minecraft.level == null || screen(minecraft) != null || minecraft.getSingleplayerServer() == null) return;
                 var server = minecraft.getSingleplayerServer();
                 var id = minecraft.player.getUUID();
                 server.execute(() -> server.getPlayerList().getPlayer(id).setGameMode(GameType.CREATIVE));
@@ -71,7 +65,7 @@ public final class ClientTest {
             }
             case 1 -> {
                 var screen = new CreativeModeInventoryScreen(minecraft.player, minecraft.player.connection.enabledFeatures(), true);
-                minecraft.gui.setScreen(screen);
+                setScreen(minecraft, screen);
                 ((SectionedCreativeScreen) screen).sprocketDyes$showColoredBlocks();
                 next(20);
             }
@@ -88,6 +82,28 @@ public final class ClientTest {
             }
             case 4 -> {
                 shot(minecraft, "red_open");
+                clickListRow(minecraft, 1);  // close Red (opening it scrolled its header to the top): all collapsed
+                // Open a section from the middle of the list: its header must stay in view.
+                if (screen(minecraft) instanceof SectionedCreativeScreen screen) {
+                    screen.sprocketDyes$scrollToRow(6);
+                    int first = screen.sprocketDyes$firstRow();
+                    var section = CreativeSections.headerAt(first + 2);
+                    click(minecraft, 2);
+                    int header = CreativeSections.headerRow(section), after = screen.sprocketDyes$firstRow();
+                    boolean ok = CreativeSections.isExpanded(section) && header >= after && header < after + 5;
+                    SprocketDyes.LOGGER.info("[clienttest] {} toggle scroll: opened {} at row {} (top row {} -> {})",
+                        ok ? "PASS" : "FAIL", section.id(), header, first, after);
+                    click(minecraft, header - after);  // and close it again
+                    after = screen.sprocketDyes$firstRow();
+                    header = CreativeSections.headerRow(section);
+                    ok = !CreativeSections.isExpanded(section) && header >= after && header < after + 5;
+                    SprocketDyes.LOGGER.info("[clienttest] {} toggle scroll: closed {} at row {} (top row {})",
+                        ok ? "PASS" : "FAIL", section.id(), header, after);
+                }
+                next(20);
+            }
+            case 5 -> {
+                shot(minecraft, "scroll_toggle");
                 next(60);  // screenshots are written on an IO thread
             }
             default -> {
@@ -103,12 +119,39 @@ public final class ClientTest {
     }
 
     private static void click(Minecraft minecraft, int visibleRow) {
-        if (minecraft.gui.screen() instanceof SectionedCreativeScreen screen) screen.sprocketDyes$clickVisibleRow(visibleRow);
+        if (screen(minecraft) instanceof SectionedCreativeScreen screen) screen.sprocketDyes$clickVisibleRow(visibleRow);
+    }
+
+    /** Clicks row {@code row} of the whole list (not of the visible grid). */
+    private static void clickListRow(Minecraft minecraft, int row) {
+        if (screen(minecraft) instanceof SectionedCreativeScreen screen) click(minecraft, row - screen.sprocketDyes$firstRow());
     }
 
     private static void shot(Minecraft minecraft, String name) {
-        Screenshot.grab(minecraft.gameDirectory, "sprocket_dyes_" + name + ".png", minecraft.gameRenderer.mainRenderTarget(), 1, message -> {});
+        String file = "sprocket_dyes_" + name + ".png";
+        //? if >=26.2 {
+        Screenshot.grab(minecraft.gameDirectory, file, minecraft.gameRenderer.mainRenderTarget(), 1, message -> {});
+        //?} else if >=1.21.6 {
+        /*Screenshot.grab(minecraft.gameDirectory, file, minecraft.getMainRenderTarget(), 1, message -> {});
+        *///?} else {
+        /*Screenshot.grab(minecraft.gameDirectory, file, minecraft.getMainRenderTarget(), message -> {});
+        *///?}
         SprocketDyes.LOGGER.info("[clienttest] screenshot {}", name);
     }
-    //?}
+
+    private static Screen screen(Minecraft minecraft) {
+        //? if >=26.2 {
+        return minecraft.gui.screen();
+        //?} else {
+        /*return minecraft.screen;
+        *///?}
+    }
+
+    private static void setScreen(Minecraft minecraft, Screen screen) {
+        //? if >=26.2 {
+        minecraft.gui.setScreen(screen);
+        //?} else {
+        /*minecraft.setScreen(screen);
+        *///?}
+    }
 }

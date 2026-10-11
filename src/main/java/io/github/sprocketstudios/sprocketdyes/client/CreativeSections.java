@@ -86,6 +86,24 @@ public final class CreativeSections {
         return row >= 0 && row < rowHeaders.size() ? rowHeaders.get(row) : null;
     }
 
+    /** The row of {@code section}'s header in the current layout, or -1. */
+    public static int headerRow(Section section) {
+        for (int i = 0; i < rowHeaders.size(); i++) {
+            Section s = rowHeaders.get(i);
+            if (s != null && s.id().equals(section.id())) return i;
+        }
+        return -1;
+    }
+
+    /** The number of rows shown under {@code section}'s header in the current layout (0 when collapsed). */
+    public static int contentRows(Section section) {
+        int header = headerRow(section);
+        if (header < 0) return 0;
+        int n = 0;
+        while (header + 1 + n < rowHeaders.size() && rowHeaders.get(header + 1 + n) == null) n++;
+        return n;
+    }
+
     /**
      * Rearranges {@code items} (the tab's display items, as vanilla put them in the screen's list) into the
      * sectioned layout.

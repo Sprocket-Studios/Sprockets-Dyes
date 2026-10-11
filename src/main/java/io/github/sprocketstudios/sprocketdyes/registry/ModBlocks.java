@@ -4,6 +4,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.sprocketstudios.sprocketdyes.SprocketDyes;
 import io.github.sprocketstudios.sprocketdyes.block.GlassShapes;
+import io.github.sprocketstudios.sprocketdyes.block.GlazedShapes;
 import io.github.sprocketstudios.sprocketdyes.color.SprocketColors;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -198,6 +199,13 @@ public final class ModBlocks {
                 case SLAB -> new GlassShapes.Slab(baseBlock, color, p);
                 case STAIRS -> new GlassShapes.Stairs(baseBlock, color, p);
                 case WALL -> new GlassShapes.Wall(baseBlock, color, p);
+            };
+        }
+        if (base == ShapeBase.GLAZED_TERRACOTTA) {
+            return switch (shape) {
+                case SLAB -> new GlazedShapes.Slab(p);
+                case STAIRS -> new StairBlock(baseBlock.defaultBlockState(), p);
+                case WALL -> new GlazedShapes.Wall(p);
             };
         }
         return switch (shape) {

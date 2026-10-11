@@ -7,14 +7,11 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
-//? if >=26.3 {
 import io.github.sprocketstudios.sprocketdyes.client.SectionHeaderRenderer;
 import java.util.Collection;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
@@ -26,6 +23,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//? if >=1.21.9 {
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 //?}
 
 /**
@@ -38,25 +38,41 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
         super(menu, inventory, title);
     }
 
-    //? if >=26.3 {
     @Shadow private static CreativeModeTab selectedTab;
     @Shadow protected abstract void selectTab(CreativeModeTab tab);
     @Shadow private float scrollOffs;
 
+    private static CreativeModeTab sprocketDyes$coloredBlocks() {
+        //? if >=1.21.2 {
+        return BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.COLORED_BLOCKS);
+        //?} else {
+        /*return BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COLORED_BLOCKS);
+        *///?}
+    }
+
     private static boolean sprocketDyes$isColoredBlocks(CreativeModeTab tab) {
-        return tab == BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.COLORED_BLOCKS);
+        return tab == sprocketDyes$coloredBlocks();
     }
 
     /** Re-lays out the list, keeping the same top row where possible. */
     private void sprocketDyes$relayout(boolean keepScroll) {
-        var picker = (ItemPickerMenuAccessor) this.menu;
-        int row = keepScroll ? picker.sprocketDyes$getRowIndexForScroll(this.scrollOffs) : 0;
+        int row = keepScroll ? ((ItemPickerMenuAccessor) this.menu).sprocketDyes$getRowIndexForScroll(this.scrollOffs) : 0;
         if (sprocketDyes$isColoredBlocks(selectedTab)) {
             CreativeSections.apply(this.menu.items);
         } else {
             CreativeSections.deactivate();
         }
-        this.scrollOffs = picker.sprocketDyes$getScrollForRowIndex(row);
+        this.sprocketDyes$scrollToRow(row);
+    }
+
+    @Override
+    public int sprocketDyes$firstRow() {
+        return ((ItemPickerMenuAccessor) this.menu).sprocketDyes$getRowIndexForScroll(this.scrollOffs);
+    }
+
+    @Override
+    public void sprocketDyes$scrollToRow(int row) {
+        this.scrollOffs = ((ItemPickerMenuAccessor) this.menu).sprocketDyes$getScrollForRowIndex(row);
         this.menu.scrollTo(this.scrollOffs);
     }
 
@@ -70,15 +86,36 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
         if (sprocketDyes$isColoredBlocks(selectedTab)) this.sprocketDyes$relayout(true);
     }
 
+    //? if >=1.21.9 {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void sprocketDyes$onClick(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
-        CreativeSections.Section section = this.sprocketDyes$headerUnder(event.x(), event.y());
+        this.sprocketDyes$click(event.x(), event.y(), event.button(), cir);
+    }
+    //?} else {
+    /*@Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void sprocketDyes$onClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        this.sprocketDyes$click(mouseX, mouseY, button, cir);
+    }
+    *///?}
+
+    private void sprocketDyes$click(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        CreativeSections.Section section = this.sprocketDyes$headerUnder(mouseX, mouseY);
         if (section == null) return;
-        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
+            // Read the top row before the list is rebuilt: the row count changes with it.
+            int first = ((ItemPickerMenuAccessor) this.menu).sprocketDyes$getRowIndexForScroll(this.scrollOffs);
             CreativeSections.toggle(section);
             this.menu.items.clear();
             this.menu.items.addAll(selectedTab.getDisplayItems());
-            this.sprocketDyes$relayout(true);
+            CreativeSections.apply(this.menu.items);
+            // Keep the clicked header where it was; when opening, scroll just enough to show the section
+            // (but never past its header).
+            int header = CreativeSections.headerRow(section);
+            if (CreativeSections.isExpanded(section) && header >= 0) {
+                int last = header + CreativeSections.contentRows(section);
+                first = Math.max(first, Math.min(header, last - 4));
+            }
+            this.sprocketDyes$scrollToRow(first);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         cir.setReturnValue(true);  // header rows are never item slots
@@ -95,14 +132,18 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
     @Override
     public void sprocketDyes$showColoredBlocks() {
-        this.selectTab(BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.COLORED_BLOCKS));
+        this.selectTab(sprocketDyes$coloredBlocks());
     }
 
     @Override
     public void sprocketDyes$clickVisibleRow(int visibleRow) {
         double x = this.leftPos + 8 + SectionHeaderRenderer.WIDTH / 2.0;
         double y = this.topPos + 17 + visibleRow * SectionHeaderRenderer.HEIGHT + SectionHeaderRenderer.HEIGHT / 2.0;
+        //? if >=1.21.9 {
         this.mouseClicked(new MouseButtonEvent(x, y, new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0)), false);
+        //?} else {
+        /*this.mouseClicked(x, y, InputConstants.MOUSE_BUTTON_LEFT);
+        *///?}
     }
 
     /** Called from AbstractContainerScreenMixin after the slots are drawn (below the carried item and tooltips). */
@@ -118,5 +159,4 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             }
         }
     }
-    //?}
 }

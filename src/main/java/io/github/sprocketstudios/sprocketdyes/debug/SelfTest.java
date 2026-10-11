@@ -67,6 +67,7 @@ public final class SelfTest {
             check(failures, shapes == expectedShapes, "shape blocks: " + shapes + " (expected " + expectedShapes + ")");
             for (var item : ModBlocks.BLOCK_ITEMS) check(failures, item.isPresent(), "block item registered: " + item.getId());
             phase5(failures);
+            glazedShapes(failures);
             sheep(server, failures);
             aliases(server, failures);
             for (DyeColor color : DyeColor.values()) {
@@ -126,6 +127,24 @@ public final class SelfTest {
         }
     }
 
+    /** Glazed slabs and walls face like the full block; every facing has the same shape. */
+    private static void glazedShapes(List<String> failures) {
+        var facing = net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
+        for (DyeColor color : DyeColor.values()) {
+            var shapes = ModBlocks.SHAPES.get(color.getName() + "_glazed_terracotta");
+            Block slab = shapes.get(ModBlocks.Shape.SLAB).get();
+            Block wall = shapes.get(ModBlocks.Shape.WALL).get();
+            check(failures, slab.defaultBlockState().hasProperty(facing) && wall.defaultBlockState().hasProperty(facing), "glazed shapes have facing: " + color);
+            BlockState side = wall.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH_WALL, net.minecraft.world.level.block.state.properties.WallSide.TALL);
+            var expected = side.getShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, BlockPos.ZERO).bounds();
+            for (var dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+                var shape = side.setValue(facing, dir).getShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+                var collision = side.setValue(facing, dir).getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+                check(failures, shape != null && collision != null && !collision.isEmpty() && shape.bounds().equals(expected), "glazed wall shape facing " + dir + ": " + color);
+            }
+        }
+    }
+
     /** A sheep keeps every color (vanilla's byte only holds 16) and its sheared flag independently. */
     private static void sheep(MinecraftServer server, List<String> failures) {
         var id = net.minecraft.resources.Identifier.withDefaultNamespace("sheep");
@@ -147,8 +166,8 @@ public final class SelfTest {
 
     /** Old ids resolve to vanilla's 26.3 blocks/items, including when read back from saved data. */
     private static void aliases(MinecraftServer server, List<String> failures) {
-        //? if neoforge {
-        /*var ops = net.minecraft.resources.RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, server.registryAccess());
+        //? if >=26.3 {
+        var ops = net.minecraft.resources.RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, server.registryAccess());
         for (var pair : io.github.sprocketstudios.sprocketdyes.registry.Aliases.pairs()) {
             Block vanilla = BuiltInRegistries.BLOCK.getValue(pair[1]);
             check(failures, BuiltInRegistries.BLOCK.getValue(pair[0]) == vanilla, "block alias: " + pair[0]);
@@ -167,7 +186,7 @@ public final class SelfTest {
             check(failures, stack.isPresent() && stack.get().getItem() == vanilla.asItem() && stack.get().getCount() == 3, "saved item stack alias: " + pair[0]);
         }
         check(failures, io.github.sprocketstudios.sprocketdyes.registry.Aliases.pairs().size() == 64, "alias count");
-        *///?}
+        //?}
     }
 
     private static BlockEntityType<?> blockEntityType(String id) {

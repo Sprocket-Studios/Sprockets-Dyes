@@ -5,7 +5,7 @@ mod.name = "Sprocket Dyes"
 mod.group = "io.github.sprocketstudios"
 mod.version = "0.1.0"
 mod.author = "Sprocket Studios"
-mod.license = "All-Rights-Reserved"
+mod.license = "LGPL-3.0-only"
 mod.description = "116 new dyes - 132 in all - with full vanilla parity, complete colored block sets, and a sectioned Colored Blocks tab."
 mod.homepage = "https://github.com/Sprocket-Studios/SprocketDyes"
 

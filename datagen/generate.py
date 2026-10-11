@@ -30,6 +30,7 @@ T = "magenta"  # template color
 VERSIONS = ["1.21.1", "1.21.3", "1.21.4", "1.21.5", "1.21.8", "1.21.10", "1.21.11", "26.1.2", "26.2", "26.3"]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import glazed  # noqa: E402
 from mixing import mixing_recipes  # noqa: E402
 from vanilla import VanillaJar  # noqa: E402
 
@@ -288,6 +289,8 @@ def generate_shape(ctx, product, own_templates):
         own = bool(own_templates) and color is not None
         templates = own_templates if own else family_templates(ctx, shape, product.stonecut)
         for side, d, stem in templates:
+            if base_suffix == "glazed_terracotta" and d in ("blockstates", "models/block"):
+                continue  # see glazed_shape_assets
             src = ctx.vj.read_text(f"{side}/minecraft/{d}/{stem}.json")
             if own:
                 text, out_stem = retarget_color(ctx, src, color), stem.replace(T, color)
@@ -303,10 +306,20 @@ def generate_shape(ctx, product, own_templates):
                     obj = style_shape_recipe(obj, base_suffix, shape)
                 write_advancement(ctx, stem, out_stem, fix)
             ctx.write(side, NS, f"{d}/{out_stem}.json", obj)
+        if base_suffix == "glazed_terracotta":
+            glazed_shape_assets(ctx, product, color)
         if product.redye and color is not None and not own:
             derived_redye(ctx, product, color)
         shape_tags(ctx, product, color, base_id, own)
         name_shape(ctx, product, color, base_id)
+
+
+def glazed_shape_assets(ctx, product, color):
+    """Glazed shapes face like the full block and show its pattern, cut to shape (datagen/glazed.py)."""
+    full = ctx.ref(BY_SUFFIX["glazed_terracotta"], color)
+    ns, path = full.split(":")
+    glazed.write_shape(lambda d, p, obj: ctx.write("assets", NS, f"{d}/{p}.json", obj),
+                       NS, product.shape[1], product.path(color), f"{ns}:block/{path}", f"{ns}:block/{path}")
 
 
 def style_shape_recipe(obj, base_suffix, shape):

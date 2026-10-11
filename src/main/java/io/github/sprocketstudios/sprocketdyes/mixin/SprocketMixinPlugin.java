@@ -36,9 +36,9 @@ public final class SprocketMixinPlugin implements IMixinConfigPlugin {
         //? if <26.2 {
         /*"ColorCollectionMixin",
         *///?}
-        //? if <26.3 {
-        /*// The sectioned Colored Blocks tab is only wired up for 26.3 so far.
-        "client.CreativeModeInventoryScreenMixin", "client.AbstractContainerScreenMixin",
+        //? if neoforge || <26.3 {
+        /*// Old-id aliases: NeoForge has an API; nothing to alias before 26.3.
+        "MappedRegistryMixin",
         *///?}
         "<none>"
     );
