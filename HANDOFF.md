@@ -1,0 +1,143 @@
+# Sprocket Dyes — handoff
+
+Notes for whoever picks this up next. **26.3 NeoForge is feature-complete and verified**; the other 19
+version/loader nodes need a re-test and one feature port (see *Remaining work*).
+
+## What the mod is
+
+132 dyes: vanilla's 4 Key dyes (white, light gray, gray, black) + a 16-hue × 2-saturation (standard,
+muted) × 4-value (bright, medium, deep, dark) grid. The 12 colored vanilla dyes sit on grid points, so
+**116 colors are new**. They are real `DyeColor` enum entries with full vanilla parity, plus:
+
+- every vanilla colored block for each new color (wool, carpet, terracotta, concrete, powder, glazed
+  terracotta, stained glass + pane, bed, banner, shulker box, candle + cake) and bundles (1.21.2+),
+  harnesses (1.21.6+), cushions (26.3)
+- slab/stairs/wall of wool, terracotta, glazed terracotta, concrete, stained glass for **all 132 colors**
+  (vanilla's included) and for undyed terracotta and glass — except the wool/concrete slabs & stairs vanilla
+  itself has from 26.3
+- a mixing grid of 397 two-dye recipes (every color reachable from vanilla dyes), random new dyes from the
+  Wandering Trader, a "Hue · Saturation · Value" tooltip on every colored item
+- the creative "Colored Blocks" tab split into collapsible sections (Key, 16 hues, Other)
+
+Display names are evocative ("Eucalyptus"); registry ids are systematic and stable (`muted_deep_teal`).
+
+## Layout & toolchain
+
+- **Stonecutter** multiloader (template: the official `stonecutter-template-multiloader`, same as
+  `../BetweenMod`): one shared `src/`, nodes `versions/<mc>-<loader>`, `build.fabric.gradle.kts`
+  (Fabric Loom via `loom-back-compat`) / `build.neoforge.gradle.kts` (ModDevGradle). Per-node versions in
+  `stonecutter.properties.toml`. **Active node is `26.3-fabric`**: `src/` is written in 26.3 dialect;
+  inactive branches of `//? if` blocks must be commented out in `src/`.
+- 10 MC nodes × 2 loaders: 1.21.1 (1.21–1.21.1), 1.21.3 (1.21.2–3), 1.21.4, 1.21.5, 1.21.8 (1.21.6–8),
+  1.21.10 (1.21.9–10), 1.21.11, 26.1.2 (26.1.x), 26.2, 26.3. Java 21 below 26.1, 25 from 26.1.
+- **Architectury API** is a runtime dependency (registries, events, networking, trades). Not Architectury Loom.
+- **Python 3 (stdlib only)** is required to build: each node's `generateData` task runs
+  `datagen/generate.py data <mc> <dir>` before `processResources`. It reads vanilla templates from
+  `~/.gradle/caches/fabric-loom/<mc>/minecraft-client.jar`, which exists once Gradle has configured the
+  Fabric nodes (any `./gradlew` invocation does).
+
+| Path | What |
+|---|---|
+| `palette/design_palette.py` → `palette/colors.json` | The palette (single source of truth). Edit CONFIG in the script, not the JSON. |
+| `palette/generate_code.py` | `colors.json` → `SprocketPalette.java`, `NewDyeColorDefinitions.java`, dye lang keys. |
+| `palette/render_preview.py` | Palette review page (published artifact). |
+| `datagen/generate.py` | Per-version data (recipes, models, blockstates, loot, tags, equipment, sheep loot) **by retargeting vanilla's own magenta files** for that version; stone-brick family as template for shapes vanilla lacks. `lang` subcommand rewrites the committed lang file. Not committed output. |
+| `datagen/mixing.py` | Mixing-grid rules + reachability check. |
+| `datagen/textures.py` | Recolors vanilla textures in OKLCH from each color's nearest vanilla color (glazed: assigned pattern; dyes: per-hue sprite). Only pixels that differ across vanilla's 16 variants are recolored (keeps bed wood, shulker heads, buckles). Output **is committed** in `src/main/resources/assets/{sprocket_dyes,minecraft}/textures`. |
+| `src/main/java/.../mixin/` | See *Vanilla sites* below. `SprocketMixinPlugin` turns mixins off per version. |
+| `src/main/java/.../registry/` | `ModBlocks`, `ModItems` (component copying), `ColorCollections` (26.2+ & switch sites), `ModMapDecorations`, `ModTrades`, `ModLoot`, `Aliases`, `Vanilla` (id lookups). |
+| `src/main/java/.../client/` | Tooltip, `CreativeSections` (tab layout model), `SectionHeaderRenderer`. |
+| `src/main/java/.../debug/` | `SelfTest` (server) and `ClientTest` (client) dev-only checks. |
+
+## Commands
+
+```bash
+./gradlew :26.3-neoforge:buildAndCollect          # one jar -> build/libs/0.1.0/
+./gradlew chiseledBuild                           # all 20 jars
+scripts/selftest-all.sh [node ...]                # server self-test (fails on any data-load error too)
+scripts/clienttest.sh [node ...]                  # client: missing models/textures check (opens a window)
+scripts/clientshots.sh 26.3-neoforge              # creative tab screenshots -> run/screenshots/ (26.3 only; needs that node's selftest world)
+python3 palette/design_palette.py && python3 palette/generate_code.py   # after palette edits
+python3 datagen/textures.py                       # after palette edits
+python3 datagen/generate.py lang                  # after product/palette changes (all 10 versions)
+```
+
+Run Gradle invocations **one at a time** — overlapping runs collide on the server port and give false failures.
+
+## How the core works
+
+- **DyeColor extension** (`DyeColorMixin`): appends 116 constants right after `$VALUES` in `<clinit>`
+  (before `BY_ID`/codecs are built); ids 16–131. Constructor signature differs from 26.2 (`terracottaColor`).
+  `LEGACY_ID_CODEC` (1.21.5+) is replaced with an unsigned-byte version (ids > 127). Firework colors must be
+  unique (`BY_FIREWORK_COLOR` uses `toMap`).
+- **Vanilla 16-color sites** go through `ColorExtensions` (site → color → value, falling back to the
+  color's vanilla source color): `ShulkerBoxBlock.getBlockByColor`, `BundleItem.getByColor` (≤1.21.11),
+  `MapBanner.getDecoration`, 1.21.1 sheep loot switch, and 26.2+ `ColorCollection.pick` (keyed by the
+  collection instance).
+- Many things need **no code** because vanilla builds them from `DyeColor.values()` by name after our
+  colors exist: bed/shulker sprite tables (1.21.4+), cushion textures, llama/harness equipment asset ids,
+  sheep loot keys (1.21.2+). Their files live in the **`minecraft:` namespace** on purpose.
+- **Sheep**: vanilla packs color into 4 bits. The full id is a plain field (`SheepMixin`), synced to clients
+  by `SheepColorPayload` (Architectury typed packet) on change and on start-tracking. Do **not** add synced
+  entity data — NeoForge rejects it in dev and warns in prod.
+- **Items** copy their vanilla counterpart's components up to 1.21.11; from 26.1 components bind late, so
+  `ModItems.copied()` spells out per-kind properties.
+- **Creative tab** (26.3 only so far): `CreativeModeInventoryScreenMixin` replaces the Colored Blocks list
+  after `selectTab`/`refreshCurrentTabContents` with `CreativeSections.apply()` (header row = 9 empty slots),
+  toggles on header clicks, and `AbstractContainerScreenMixin` draws headers at the end of
+  `extractContents`. Only the visible list changes; tab contents/search/JEI are untouched.
+- **26.3 aliases** (`Aliases`): old `sprocket_dyes:<vanilla color>_{wool,concrete}_{slab,stairs}` →
+  vanilla ids, NeoForge `addAlias` for blocks and items.
+
+## Status
+
+Verified on **26.3 NeoForge** (2026-10-11): server self-test (colors, codecs, registrations, all data loads,
+block entities, villager homes, map markers, collection picks, sheep colors, aliases incl. saved states),
+client asset test (no missing models/textures), creative tab screenshots with real clicks. The user is
+doing the in-game visual pass.
+
+Last known server self-test results on other nodes:
+- Passed **with current code**: 1.21.1-fabric, 1.21.8-neoforge, 1.21.10-neoforge, 26.2-neoforge, 26.3-fabric.
+- Passed **before** the sheep-packet rewrite: 1.21.1-neoforge, 1.21.3 (both), 1.21.4 (both), 1.21.5 (both),
+  1.21.8-fabric, 1.21.10-fabric.
+- Not run since Phase 5: 1.21.11 (both), 26.1.2 (both), 26.2-fabric, 26.3 aliases on Fabric.
+- Client asset test: only 26.3-neoforge.
+
+## Remaining work (suggested order)
+
+1. **Full matrix**: `scripts/selftest-all.sh` and `scripts/clienttest.sh` on all 20 nodes; fix what breaks.
+2. **Creative sections on the other versions.** `CreativeModeInventoryScreenMixin`,
+   `AbstractContainerScreenMixin`, `SectionHeaderRenderer` are `//? if >=26.3` and disabled below 26.3 in
+   `SprocketMixinPlugin`. Differences to handle:
+   - drawing: `GuiGraphics` (≤1.21.11, immediate; 1.21.6 render-pipeline changes) vs `GuiGraphicsExtractor`
+     (26.1+; already a Stonecutter replacement for the class name) — find the "after slots, before
+     tooltip" hook per version (`renderSlots`/`renderContents` names change)
+   - input: `mouseClicked(double, double, int)` before 1.21.9, `MouseButtonEvent` from 1.21.9; **26.x uses
+     SDL button numbers (left = `InputConstants.MOUSE_BUTTON_LEFT` = 1)** — check 26.1/26.2
+   - `minecraft.getOverlay()` vs `minecraft.gui.overlay()` (26.2+), `setScreen` location
+   - extend `scripts/clientshots.sh`/`ClientTest.shots()` per version and look at the screenshots
+3. **Fabric 26.3 aliases**: Fabric has no registry alias API; add a small mixin (e.g. on registry id lookup)
+   so `Aliases.pairs()` also applies on Fabric, and enable the alias self-test there.
+4. **Polish**: mod icon (`assets/sprocket_dyes/icon.png` is referenced but missing), license
+   (`stonecutter.properties.toml` says All-Rights-Reserved as a placeholder — ask the owner), check
+   Sodium/other popular mods (a Sodium alpha crashed on NeoForge 26.3.0.65-beta on its own — not ours).
+5. **Deliberately not done**: shepherd villagers selling beds/banners in new colors (would crowd vanilla's
+   trade pools), colored shulker mobs.
+6. **Git**: only the initial scaffold is committed; everything since is uncommitted. Ask before committing.
+
+## Gotchas learned the hard way
+
+- Exhaustive `switch` over `DyeColor` throws `MatchException` for new colors — every such site needs a guard.
+- `Sheep` has a static `getColor(DyeColor)` before 1.21.5 — target `getColor()Lnet/minecraft/world/item/DyeColor;`.
+- `Properties.ofFullCopy` copies `drops`/`descriptionId`; fine for id-derived defaults, but wall banners
+  must `overrideLootTable`/`overrideDescription` (≤1.21.1: `dropsLike`).
+- `ServerChunkCache.broadcast` became `sendToTrackingPlayers` in 1.21.9.
+- 26.3 loot functions use `"type"`, 26.1–26.2 villager trades use `given_item_modifiers` (list).
+- NeoForge 1.21.x dev runs don't start MixinExtras (breaks Architectury's `@Local`) — `SprocketMixinPlugin`
+  bootstraps it; the NeoForge build adds `mixinextras-neoforge` to the dev classpath.
+- Data-gen: `\b` treats `_` as a word char; template tokens need `(?<![a-z0-9])` lookarounds. Some vanilla
+  models use namespace-less paths (`item/x`).
+- Vanilla's re-dye recipes list "every other color" explicitly; the generator rebuilds those lists for 132
+  colors and overrides vanilla's 16 re-dye recipes so they accept our items too.
+- First client launch shows the accessibility onboarding screen, which blocks quick play
+  (`clientshots.sh` sets `onboardAccessibility:false`).

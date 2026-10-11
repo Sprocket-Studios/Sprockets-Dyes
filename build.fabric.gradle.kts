@@ -40,11 +40,25 @@ dependencies {
     }
 }
 
-// Datagen output for this MC version, shared with the NeoForge node of the same version.
-val generatedResources = rootProject.file("src/generated/${sc.current.version}/resources")
+
+// Data (recipes, models, loot tables, tags, ...) for this MC version, generated from vanilla's own files.
+// Not committed: `python3 datagen/generate.py data <mc> <dir>` runs here, before processResources.
+val generatedData = layout.buildDirectory.dir("generated/sprocket-data")
+val generateData = tasks.register<Exec>("generateData") {
+    group = "build"
+    description = "Generates this version's data from vanilla templates (datagen/generate.py)"
+    val mc = sc.current.version
+    val out = generatedData.get().asFile
+    inputs.dir(rootProject.file("datagen")).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(rootProject.file("palette/colors.json"))
+    inputs.file(File(System.getProperty("user.home"), ".gradle/caches/fabric-loom/$mc/minecraft-client.jar"))
+    outputs.dir(out)
+    environment("PYTHONDONTWRITEBYTECODE", "1")
+    commandLine("python3", rootProject.file("datagen/generate.py").absolutePath, "data", mc, out.absolutePath)
+}
 
 sourceSets.main {
-    resources.srcDir(generatedResources)
+    resources.srcDir(generatedData)
 }
 
 loom {
@@ -64,14 +78,28 @@ loom {
         runDirectory = rootProject.file("run")
         jvmArguments.add("-Dmixin.debug.export=true")
     }
+
+    // Servers get a per-node directory so worlds from newer versions never meet older ones.
+    // `./gradlew :<node>:runServer -Pselftest` runs the self-test and exits.
+    runConfigs.named("client") {
+        // `./gradlew :<node>:runClient -Pclienttest` loads resources, then exits (scripts/clienttest.sh).
+        if (project.hasProperty("clienttest")) jvmArguments.add("-Dsprocket_dyes.clienttest=true")
+        // `-Pclientshots`: quick-play into run/saves/sprocket-test and screenshot the creative tab.
+        if (project.hasProperty("clientshots")) {
+            jvmArguments.add("-Dsprocket_dyes.clientshots=true")
+            programArgs("--quickPlaySingleplayer", "sprocket-test")
+        }
+    }
+
+    runConfigs.named("server") {
+        runDirectory = rootProject.file("run/server-${project.name}")
+        programArgs("--nogui")
+        if (project.hasProperty("selftest")) jvmArguments.add("-Dsprocket_dyes.selftest=true")
+    }
 }
 
-fabricApi {
-    configureDataGeneration {
-        client = true
-        outputDirectory = generatedResources
-        modId = property("mod.id") as String
-    }
+tasks.matching { it.name == "runServer" }.configureEach {
+    doFirst { rootProject.file("run/server-${project.name}/eula.txt").apply { parentFile.mkdirs(); writeText("eula=true\n") } }
 }
 
 java {
@@ -86,6 +114,9 @@ java {
 
 tasks {
     processResources {
+        // Adding our own resource srcDir drops Stonecutter's implicit task wiring for its processed resources.
+        dependsOn("stonecutterGenerate", generateData)
+
         fun MutableMap<String, String>.register(key: String, value: String) {
             inputs.property(key, value)
             set(key, value)

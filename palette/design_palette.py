@@ -128,7 +128,7 @@ VANILLA_NAMES = {
 
 # Vanilla terracotta map color per dye (TERRACOTTA_<DYE>).
 def terracotta_map(dye):
-    return "TERRACOTTA_" + dye.upper()
+    return "TERRACOTTA_" + ("LIGHT_GREEN" if dye == "lime" else dye.upper())
 
 # Every vanilla MapColor (name, rgb) a dye color may resolve to.
 MAP_COLORS = [
@@ -358,6 +358,32 @@ def main():
         c["firework"] = src[3] if c["vanilla"] else transfer(c["hex"], src[1], src[3])
         c["text"] = src[4] if c["vanilla"] else transfer(c["hex"], src[1], src[4])
 
+    # Dye item sprites differ in shape per vanilla dye, so a hue keeps one shape: the anchor in that hue
+    # (closest value), or else the anchor of the nearest hue on the wheel.
+    anchors = [c for c in grid if c["vanilla"]]
+    for c in grid:
+        if c["vanilla"]:
+            c["dye_source"] = c["id"]
+            continue
+        same = [a for a in anchors if a["hue"] == c["hue"]]
+        pool = same or anchors
+        def score(a):
+            dh = abs(((angles[a["hue"]] - angles[c["hue"]] + 180) % 360) - 180)
+            return (dh, abs(VALUES.index(a["value"]) - VALUES.index(c["value"])))
+        c["dye_source"] = min(pool, key=score)["id"]
+
+    # DyeColor.BY_FIREWORK_COLOR is built with Collectors.toMap, which throws on duplicate keys:
+    # every firework color must be unique across all 132 colors.
+    taken = {v[3] for v in VANILLA}
+    for c in grid:
+        if c["vanilla"]:
+            continue
+        rgb = int(c["firework"], 16)
+        while f"{rgb:06X}" in taken:
+            rgb = (rgb + 1) & 0xFFFFFF
+        c["firework"] = f"{rgb:06X}"
+        taken.add(c["firework"])
+
     # Glazed patterns: each new color borrows one of the 16 vanilla patterns. Within a hue section
     # all 8 patterns are distinct, and every pattern ends up used 8-9 times overall.
     rng = random.Random(GLAZED_SEED)
@@ -383,7 +409,7 @@ def main():
         v = VANILLA_BY_ID[k]
         key.append({"id": k, "name": VANILLA_NAMES[k], "hue": "key", "sat": None, "value": None, "hex": v[1],
                     "vanilla": True, "source": k, "map_color": v[2], "terracotta_map_color": terracotta_map(k),
-                    "firework": v[3], "text": v[4], "glazed": k})
+                    "firework": v[3], "text": v[4], "glazed": k, "dye_source": k})
 
     # Similarity warnings (OKLab distance) - anything under this is likely hard to tell apart.
     allc = key + grid

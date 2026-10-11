@@ -11,7 +11,7 @@ version = "${version}"
 authors = "${author}"
 displayURL = "${homepage}"
 description = "${description}"
-logoFile = "assets/sprocket_dyes/icon.png"
+${logo_key} = "assets/sprocket_dyes/icon.png"
 
 [[mixins]]
 config = "sprocket_dyes.mixins.json"

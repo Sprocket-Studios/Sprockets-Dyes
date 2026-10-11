@@ -106,7 +106,8 @@
       "terracotta_map_color": "TERRACOTTA_WHITE",
       "firework": "F0F0F0",
       "text": "FFFFFF",
-      "glazed": "white"
+      "glazed": "white",
+      "dye_source": "white"
     },
     {
       "id": "light_gray",
@@ -121,7 +122,8 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_GRAY",
       "firework": "ABABAB",
       "text": "D3D3D3",
-      "glazed": "light_gray"
+      "glazed": "light_gray",
+      "dye_source": "light_gray"
     },
     {
       "id": "gray",
@@ -136,7 +138,8 @@
       "terracotta_map_color": "TERRACOTTA_GRAY",
       "firework": "434343",
       "text": "808080",
-      "glazed": "gray"
+      "glazed": "gray",
+      "dye_source": "gray"
     },
     {
       "id": "black",
@@ -151,7 +154,8 @@
       "terracotta_map_color": "TERRACOTTA_BLACK",
       "firework": "1E1B1B",
       "text": "000000",
-      "glazed": "black"
+      "glazed": "black",
+      "dye_source": "black"
     }
   ],
   "colors": [
@@ -168,6 +172,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "DA846F",
       "text": "FF708E",
+      "dye_source": "red",
       "glazed": "white"
     },
     {
@@ -183,6 +188,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "DF514F",
       "text": "EF0D38",
+      "dye_source": "red",
       "glazed": "light_gray"
     },
     {
@@ -198,6 +204,7 @@
       "terracotta_map_color": "TERRACOTTA_RED",
       "firework": "B3312C",
       "text": "FF0000",
+      "dye_source": "red",
       "glazed": "red"
     },
     {
@@ -213,6 +220,7 @@
       "terracotta_map_color": "TERRACOTTA_RED",
       "firework": "820B0F",
       "text": "BD0100",
+      "dye_source": "red",
       "glazed": "purple"
     },
     {
@@ -228,6 +236,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "CB9280",
       "text": "F4809E",
+      "dye_source": "red",
       "glazed": "pink"
     },
     {
@@ -243,6 +252,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "C6706F",
       "text": "D9515A",
+      "dye_source": "red",
       "glazed": "green"
     },
     {
@@ -258,6 +268,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "682D2F",
       "text": "A34132",
+      "dye_source": "red",
       "glazed": "yellow"
     },
     {
@@ -273,6 +284,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "3D1619",
       "text": "74271A",
+      "dye_source": "red",
       "glazed": "lime"
     },
     {
@@ -288,6 +300,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "EB8844",
       "text": "FF681F",
+      "dye_source": "orange",
       "glazed": "orange"
     },
     {
@@ -303,6 +316,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "B17041",
       "text": "C55326",
+      "dye_source": "orange",
       "glazed": "blue"
     },
     {
@@ -318,6 +332,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "51301A",
       "text": "8B4513",
+      "dye_source": "brown",
       "glazed": "brown"
     },
     {
@@ -333,6 +348,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "2C0F00",
       "text": "5A2600",
+      "dye_source": "brown",
       "glazed": "black"
     },
     {
@@ -348,6 +364,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "D79871",
       "text": "EE7D5A",
+      "dye_source": "orange",
       "glazed": "red"
     },
     {
@@ -363,6 +380,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "7C5138",
       "text": "BA6937",
+      "dye_source": "orange",
       "glazed": "cyan"
     },
     {
@@ -378,6 +396,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "4C3B32",
       "text": "865337",
+      "dye_source": "brown",
       "glazed": "gray"
     },
     {
@@ -393,6 +412,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "2A1C15",
       "text": "603116",
+      "dye_source": "brown",
       "glazed": "light_blue"
     },
     {
@@ -408,6 +428,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "D9AA3D",
       "text": "FBD935",
+      "dye_source": "orange",
       "glazed": "orange"
     },
     {
@@ -423,6 +444,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "B8934C",
       "text": "D07A2F",
+      "dye_source": "orange",
       "glazed": "cyan"
     },
     {
@@ -438,6 +460,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "664500",
       "text": "9D5F00",
+      "dye_source": "brown",
       "glazed": "brown"
     },
     {
@@ -453,6 +476,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "3C2700",
       "text": "6E4000",
+      "dye_source": "brown",
       "glazed": "magenta"
     },
     {
@@ -468,6 +492,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "CCB36E",
       "text": "EDE274",
+      "dye_source": "orange",
       "glazed": "yellow"
     },
     {
@@ -483,6 +508,7 @@
       "terracotta_map_color": "TERRACOTTA_ORANGE",
       "firework": "AD9C75",
       "text": "C88460",
+      "dye_source": "orange",
       "glazed": "gray"
     },
     {
@@ -498,6 +524,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "604F34",
       "text": "9D6834",
+      "dye_source": "brown",
       "glazed": "pink"
     },
     {
@@ -513,6 +540,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "3A3223",
       "text": "744924",
+      "dye_source": "brown",
       "glazed": "white"
     },
     {
@@ -528,6 +556,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "DECF2A",
       "text": "FFFF00",
+      "dye_source": "yellow",
       "glazed": "yellow"
     },
     {
@@ -540,9 +569,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "GRASS",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "AFBA46",
       "text": "FFE993",
+      "dye_source": "yellow",
       "glazed": "magenta"
     },
     {
@@ -558,6 +588,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "7B5E23",
       "text": "DFFFC2",
+      "dye_source": "yellow",
       "glazed": "purple"
     },
     {
@@ -573,6 +604,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "484000",
       "text": "7E5B00",
+      "dye_source": "yellow",
       "glazed": "red"
     },
     {
@@ -588,6 +620,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "D6D474",
       "text": "F6FFBF",
+      "dye_source": "yellow",
       "glazed": "orange"
     },
     {
@@ -603,6 +636,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "AAAE66",
       "text": "C9DD6C",
+      "dye_source": "yellow",
       "glazed": "blue"
     },
     {
@@ -618,6 +652,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "796552",
       "text": "F0FFEB",
+      "dye_source": "yellow",
       "glazed": "brown"
     },
     {
@@ -633,6 +668,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "484A32",
       "text": "856334",
+      "dye_source": "yellow",
       "glazed": "light_blue"
     },
     {
@@ -648,6 +684,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "AAC737",
       "text": "C8F729",
+      "dye_source": "yellow",
       "glazed": "blue"
     },
     {
@@ -660,9 +697,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "GRASS",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "80AF3F",
       "text": "E1DE30",
+      "dye_source": "yellow",
       "glazed": "light_blue"
     },
     {
@@ -678,6 +716,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "59561E",
       "text": "95FF68",
+      "dye_source": "yellow",
       "glazed": "brown"
     },
     {
@@ -693,6 +732,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "2A3600",
       "text": "615100",
+      "dye_source": "yellow",
       "glazed": "lime"
     },
     {
@@ -708,6 +748,7 @@
       "terracotta_map_color": "TERRACOTTA_YELLOW",
       "firework": "ABC86F",
       "text": "C8F874",
+      "dye_source": "yellow",
       "glazed": "light_gray"
     },
     {
@@ -720,9 +761,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "GLOW_LICHEN",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "83B26F",
       "text": "E4E175",
+      "dye_source": "yellow",
       "glazed": "green"
     },
     {
@@ -738,6 +780,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "5E5A47",
       "text": "AFFFA9",
+      "dye_source": "yellow",
       "glazed": "black"
     },
     {
@@ -753,6 +796,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "2F3D28",
       "text": "6C5729",
+      "dye_source": "yellow",
       "glazed": "white"
     },
     {
@@ -765,9 +809,10 @@
       "vanilla": true,
       "source": "lime",
       "map_color": "COLOR_LIGHT_GREEN",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "41CD34",
       "text": "BFFF00",
+      "dye_source": "lime",
       "glazed": "lime"
     },
     {
@@ -783,6 +828,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "4E722C",
       "text": "E2FFDF",
+      "dye_source": "lime",
       "glazed": "pink"
     },
     {
@@ -798,6 +844,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "3B511A",
       "text": "00FF00",
+      "dye_source": "green",
       "glazed": "green"
     },
     {
@@ -813,6 +860,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "082B00",
       "text": "454500",
+      "dye_source": "green",
       "glazed": "red"
     },
     {
@@ -825,9 +873,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "GRASS",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "60CA6C",
       "text": "D0FC6E",
+      "dye_source": "lime",
       "glazed": "orange"
     },
     {
@@ -843,6 +892,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "747A60",
       "text": "BAFFC7",
+      "dye_source": "lime",
       "glazed": "magenta"
     },
     {
@@ -858,6 +908,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "475240",
       "text": "61FF78",
+      "dye_source": "green",
       "glazed": "yellow"
     },
     {
@@ -873,6 +924,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "16301D",
       "text": "544A1D",
+      "dye_source": "green",
       "glazed": "light_gray"
     },
     {
@@ -885,9 +937,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "EMERALD",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "00D27F",
       "text": "BCFFAD",
+      "dye_source": "lime",
       "glazed": "purple"
     },
     {
@@ -903,6 +956,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "007848",
       "text": "DAFFE2",
+      "dye_source": "lime",
       "glazed": "magenta"
     },
     {
@@ -918,6 +972,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "004F31",
       "text": "00F27C",
+      "dye_source": "green",
       "glazed": "black"
     },
     {
@@ -933,6 +988,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "002A1B",
       "text": "00C365",
+      "dye_source": "green",
       "glazed": "gray"
     },
     {
@@ -945,9 +1001,10 @@
       "vanilla": false,
       "source": "lime",
       "map_color": "COLOR_LIGHT_GREEN",
-      "terracotta_map_color": "TERRACOTTA_LIME",
+      "terracotta_map_color": "TERRACOTTA_LIGHT_GREEN",
       "firework": "23D48C",
       "text": "CBFFB6",
+      "dye_source": "lime",
       "glazed": "lime"
     },
     {
@@ -963,6 +1020,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "587E6D",
       "text": "A6FFD4",
+      "dye_source": "lime",
       "glazed": "pink"
     },
     {
@@ -978,6 +1036,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "295044",
       "text": "00FA85",
+      "dye_source": "green",
       "glazed": "green"
     },
     {
@@ -993,6 +1052,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "003023",
       "text": "484B27",
+      "dye_source": "green",
       "glazed": "cyan"
     },
     {
@@ -1008,6 +1068,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "6EA3A3",
       "text": "A7D691",
+      "dye_source": "cyan",
       "glazed": "yellow"
     },
     {
@@ -1023,6 +1084,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "347B7E",
       "text": "6AFFE1",
+      "dye_source": "cyan",
       "glazed": "black"
     },
     {
@@ -1038,6 +1100,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "004A4B",
       "text": "00EC9D",
+      "dye_source": "cyan",
       "glazed": "blue"
     },
     {
@@ -1053,6 +1116,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "002521",
       "text": "2B462B",
+      "dye_source": "cyan",
       "glazed": "red"
     },
     {
@@ -1068,6 +1132,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "8C9EA9",
       "text": "C4D198",
+      "dye_source": "cyan",
       "glazed": "brown"
     },
     {
@@ -1083,6 +1148,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "587986",
       "text": "8DFFE9",
+      "dye_source": "cyan",
       "glazed": "orange"
     },
     {
@@ -1098,6 +1164,7 @@
       "terracotta_map_color": "TERRACOTTA_GREEN",
       "firework": "294B56",
       "text": "00F59D",
+      "dye_source": "cyan",
       "glazed": "cyan"
     },
     {
@@ -1113,6 +1180,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "002D2D",
       "text": "464936",
+      "dye_source": "cyan",
       "glazed": "white"
     },
     {
@@ -1128,6 +1196,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "6D9CC0",
       "text": "A5D1B5",
+      "dye_source": "cyan",
       "glazed": "purple"
     },
     {
@@ -1143,6 +1212,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "287697",
       "text": "00FFFF",
+      "dye_source": "cyan",
       "glazed": "cyan"
     },
     {
@@ -1158,6 +1228,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "214E6D",
       "text": "16D1D1",
+      "dye_source": "cyan",
       "glazed": "gray"
     },
     {
@@ -1173,6 +1244,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "003836",
       "text": "004A6C",
+      "dye_source": "cyan",
       "glazed": "lime"
     },
     {
@@ -1188,6 +1260,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "8A99BC",
       "text": "C1CDB0",
+      "dye_source": "cyan",
       "glazed": "light_gray"
     },
     {
@@ -1203,6 +1276,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "537596",
       "text": "76FEFD",
+      "dye_source": "cyan",
       "glazed": "blue"
     },
     {
@@ -1218,6 +1292,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "41506F",
       "text": "67D3D2",
+      "dye_source": "cyan",
       "glazed": "light_blue"
     },
     {
@@ -1233,6 +1308,7 @@
       "terracotta_map_color": "TERRACOTTA_GRAY",
       "firework": "334440",
       "text": "6E817D",
+      "dye_source": "cyan",
       "glazed": "green"
     },
     {
@@ -1248,6 +1324,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "6689D3",
       "text": "9AC0CD",
+      "dye_source": "light_blue",
       "glazed": "light_blue"
     },
     {
@@ -1263,6 +1340,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "3263A2",
       "text": "77E6FF",
+      "dye_source": "light_blue",
       "glazed": "cyan"
     },
     {
@@ -1278,6 +1356,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "004F61",
       "text": "006199",
+      "dye_source": "light_blue",
       "glazed": "white"
     },
     {
@@ -1293,6 +1372,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "002C36",
       "text": "003E66",
+      "dye_source": "light_blue",
       "glazed": "green"
     },
     {
@@ -1308,6 +1388,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "8188C7",
       "text": "B5BDBF",
+      "dye_source": "light_blue",
       "glazed": "yellow"
     },
     {
@@ -1323,6 +1404,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "506499",
       "text": "80EBFF",
+      "dye_source": "light_blue",
       "glazed": "purple"
     },
     {
@@ -1338,6 +1420,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "003E55",
       "text": "525C62",
+      "dye_source": "light_blue",
       "glazed": "gray"
     },
     {
@@ -1353,6 +1436,7 @@
       "terracotta_map_color": "TERRACOTTA_GRAY",
       "firework": "2B393E",
       "text": "65747B",
+      "dye_source": "light_blue",
       "glazed": "magenta"
     },
     {
@@ -1368,6 +1452,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "7478EA",
       "text": "A4B3E7",
+      "dye_source": "blue",
       "glazed": "light_blue"
     },
     {
@@ -1383,6 +1468,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "3451C2",
       "text": "9BD8FF",
+      "dye_source": "blue",
       "glazed": "black"
     },
     {
@@ -1398,6 +1484,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "004774",
       "text": "005AA4",
+      "dye_source": "blue",
       "glazed": "brown"
     },
     {
@@ -1413,6 +1500,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "002741",
       "text": "00386B",
+      "dye_source": "blue",
       "glazed": "lime"
     },
     {
@@ -1428,6 +1516,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "867CD6",
       "text": "B9B4D0",
+      "dye_source": "blue",
       "glazed": "orange"
     },
     {
@@ -1443,6 +1532,7 @@
       "terracotta_map_color": "TERRACOTTA_CYAN",
       "firework": "4D5AAD",
       "text": "A0DFFF",
+      "dye_source": "blue",
       "glazed": "red"
     },
     {
@@ -1458,6 +1548,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "1F4E6E",
       "text": "0060AF",
+      "dye_source": "blue",
       "glazed": "pink"
     },
     {
@@ -1473,6 +1564,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "102E41",
       "text": "004079",
+      "dye_source": "blue",
       "glazed": "light_gray"
     },
     {
@@ -1488,6 +1580,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "8F64E9",
       "text": "C1A0E7",
+      "dye_source": "blue",
       "glazed": "white"
     },
     {
@@ -1503,6 +1596,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "3E4ED2",
       "text": "3568FF",
+      "dye_source": "blue",
       "glazed": "pink"
     },
     {
@@ -1518,6 +1612,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "253192",
       "text": "0000FF",
+      "dye_source": "blue",
       "glazed": "blue"
     },
     {
@@ -1533,6 +1628,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "11006B",
       "text": "0600A5",
+      "dye_source": "blue",
       "glazed": "green"
     },
     {
@@ -1548,6 +1644,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "986DD4",
       "text": "CCA5D0",
+      "dye_source": "blue",
       "glazed": "yellow"
     },
     {
@@ -1563,6 +1660,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "4A5FB2",
       "text": "3270FF",
+      "dye_source": "blue",
       "glazed": "brown"
     },
     {
@@ -1578,6 +1676,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "314278",
       "text": "004ECF",
+      "dye_source": "blue",
       "glazed": "red"
     },
     {
@@ -1593,6 +1692,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "152258",
       "text": "00328F",
+      "dye_source": "blue",
       "glazed": "black"
     },
     {
@@ -1608,6 +1708,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "AE64EB",
       "text": "E2A0E8",
+      "dye_source": "blue",
       "glazed": "magenta"
     },
     {
@@ -1623,6 +1724,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "745BF4",
       "text": "9773FF",
+      "dye_source": "blue",
       "glazed": "purple"
     },
     {
@@ -1638,6 +1740,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "4D20AA",
       "text": "4516FF",
+      "dye_source": "blue",
       "glazed": "light_gray"
     },
     {
@@ -1653,6 +1756,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "2C0070",
       "text": "2A00B0",
+      "dye_source": "blue",
       "glazed": "light_blue"
     },
     {
@@ -1668,6 +1772,7 @@
       "terracotta_map_color": "TERRACOTTA_LIGHT_BLUE",
       "firework": "AF70D9",
       "text": "E5A8D3",
+      "dye_source": "blue",
       "glazed": "blue"
     },
     {
@@ -1683,6 +1788,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "7F77DF",
       "text": "BE72FF",
+      "dye_source": "blue",
       "glazed": "gray"
     },
     {
@@ -1698,6 +1804,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "4C418B",
       "text": "363FF9",
+      "dye_source": "blue",
       "glazed": "orange"
     },
     {
@@ -1713,6 +1820,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "2D265C",
       "text": "1A15C3",
+      "dye_source": "blue",
       "glazed": "cyan"
     },
     {
@@ -1728,6 +1836,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "B288E1",
       "text": "DD72FB",
+      "dye_source": "purple",
       "glazed": "light_blue"
     },
     {
@@ -1743,6 +1852,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "AB5FF3",
       "text": "D669FF",
+      "dye_source": "purple",
       "glazed": "black"
     },
     {
@@ -1758,6 +1868,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "7B2FBE",
       "text": "A020F0",
+      "dye_source": "purple",
       "glazed": "purple"
     },
     {
@@ -1773,6 +1884,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "55008E",
       "text": "7300B2",
+      "dye_source": "purple",
       "glazed": "cyan"
     },
     {
@@ -1788,6 +1900,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "AC95D1",
       "text": "DA82EC",
+      "dye_source": "purple",
       "glazed": "gray"
     },
     {
@@ -1803,6 +1916,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "A278DA",
       "text": "DC70FF",
+      "dye_source": "purple",
       "glazed": "orange"
     },
     {
@@ -1818,6 +1932,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "7152A5",
       "text": "9755D7",
+      "dye_source": "purple",
       "glazed": "brown"
     },
     {
@@ -1833,6 +1948,7 @@
       "terracotta_map_color": "TERRACOTTA_BLUE",
       "firework": "442A5B",
       "text": "3528C4",
+      "dye_source": "purple",
       "glazed": "lime"
     },
     {
@@ -1848,6 +1964,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "D86CD5",
       "text": "FF46EF",
+      "dye_source": "magenta",
       "glazed": "white"
     },
     {
@@ -1863,6 +1980,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "C354CD",
       "text": "FF00FF",
+      "dye_source": "magenta",
       "glazed": "magenta"
     },
     {
@@ -1878,6 +1996,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "90209C",
       "text": "B400CD",
+      "dye_source": "magenta",
       "glazed": "red"
     },
     {
@@ -1893,6 +2012,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "5F086D",
       "text": "7E0095",
+      "dye_source": "magenta",
       "glazed": "pink"
     },
     {
@@ -1908,6 +2028,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "C983C7",
       "text": "F26AE2",
+      "dye_source": "magenta",
       "glazed": "lime"
     },
     {
@@ -1923,6 +2044,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "B370C0",
       "text": "F156F2",
+      "dye_source": "magenta",
       "glazed": "yellow"
     },
     {
@@ -1938,6 +2060,7 @@
       "terracotta_map_color": "TERRACOTTA_PURPLE",
       "firework": "814B90",
       "text": "A54DC0",
+      "dye_source": "magenta",
       "glazed": "blue"
     },
     {
@@ -1953,6 +2076,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "34123E",
       "text": "69284B",
+      "dye_source": "magenta",
       "glazed": "green"
     },
     {
@@ -1968,6 +2092,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "D88198",
       "text": "FF69B4",
+      "dye_source": "pink",
       "glazed": "pink"
     },
     {
@@ -1983,6 +2108,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "E14C92",
       "text": "FF55BB",
+      "dye_source": "pink",
       "glazed": "magenta"
     },
     {
@@ -1998,6 +2124,7 @@
       "terracotta_map_color": "TERRACOTTA_RED",
       "firework": "B61D61",
       "text": "FA0063",
+      "dye_source": "pink",
       "glazed": "brown"
     },
     {
@@ -2013,6 +2140,7 @@
       "terracotta_map_color": "TERRACOTTA_RED",
       "firework": "7F0A41",
       "text": "BC0044",
+      "dye_source": "pink",
       "glazed": "light_gray"
     },
     {
@@ -2028,6 +2156,7 @@
       "terracotta_map_color": "TERRACOTTA_PINK",
       "firework": "C9909D",
       "text": "F27DB9",
+      "dye_source": "pink",
       "glazed": "purple"
     },
     {
@@ -2043,6 +2172,7 @@
       "terracotta_map_color": "TERRACOTTA_MAGENTA",
       "firework": "CA6E99",
       "text": "FF5FC8",
+      "dye_source": "pink",
       "glazed": "light_blue"
     },
     {
@@ -2058,6 +2188,7 @@
       "terracotta_map_color": "TERRACOTTA_RED",
       "firework": "A24E6C",
       "text": "EF4D6A",
+      "dye_source": "pink",
       "glazed": "red"
     },
     {
@@ -2073,6 +2204,7 @@
       "terracotta_map_color": "TERRACOTTA_BROWN",
       "firework": "3D142C",
       "text": "732735",
+      "dye_source": "pink",
       "glazed": "yellow"
     }
   ],

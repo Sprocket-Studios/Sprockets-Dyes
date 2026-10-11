@@ -3,9 +3,29 @@
   "minVersion": "0.8",
   "package": "io.github.sprocketstudios.sprocketdyes.mixin",
   "compatibilityLevel": "${java}",
-  "mixins": [],
-  "client": [],
+  "mixins": [
+    "BlockEntityTypeMixin",
+    "BundleItemMixin",
+    "ColorCollectionMixin",
+    "DyeColorMixin",
+    "EntityMixin",
+    "MapBannerMixin",
+    "PoiTypeMixin",
+    "PoiTypesMixin",
+    "SheepLegacyMixin",
+    "SheepMixin",
+    "SheepNbtMixin",
+    "ShulkerBoxBlockMixin"
+  ],
+  "client": [
+    "client.AbstractContainerScreenMixin",
+    "client.CreativeModeInventoryScreenMixin",
+    "client.ItemPickerMenuAccessor",
+    "client.LlamaDecorLayerMixin",
+    "client.SheetsMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "io.github.sprocketstudios.sprocketdyes.mixin.SprocketMixinPlugin"
 }
